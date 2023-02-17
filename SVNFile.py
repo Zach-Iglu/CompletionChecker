@@ -2,6 +2,7 @@
 ###################
 ## SVN File Object
 ###################
+import datetime
 import os.path
 import platform
 import subprocess
@@ -65,9 +66,11 @@ class SVNFile:
         return self.remote.path()
 
     def checkSyntaxRemote(self):
+        beginTime = datetime.datetime.now()
+
         command_to_check = "ssh -X " + variables.REMOTE_USER + "@" + variables.REMOTE_HOSTNAME + " " + SVN_SYNTAX_CHECK + " " + self.remote.path()
-        dPrint("Checking Syntax of " + self.remote.basename)
-        dPrint(command_to_check, status="WARN")
+        # dPrint("Checking Syntax of " + self.remote.basename)
+        # dPrint(command_to_check, status="WARN")
         # Send Command
         command = subprocess.check_output(command_to_check, shell=True, stderr=subprocess.STDOUT)
 
@@ -86,11 +89,20 @@ class SVNFile:
             if "braces" in error.lower() or "bracket" in error.lower():
                 self.critical_errors.append(error.strip())
 
+            if "unknown" not in error.lower() and ("command" in error.lower() or "tlm" in error.lower() or "telemetry" in error.lower()):
+                self.critical_errors.append(error.strip())
+
+
+        endTime = datetime.datetime.now()
+        elapsed = (endTime - beginTime).seconds
         if len(self.critical_errors) == 0:
-            dPrint("Script **Should** Pass")
+            dPrint(self.remote.basename + " **Passed** ", status="SUCC")
         else:
-            dPrint("         Errors: " + str(len(self.errors)))
-            dPrint("Critical Errors: " + str(len(self.critical_errors)))
+            # dPrint("         Errors: " + str(len(self.errors)))
+            # dPrint("Critical Errors: " + str(len(self.critical_errors)))
+            dPrint(self.remote.basename + " FAILED with  " + str(len(self.critical_errors)) + " Critical Errors", status="FAIL")
+
+
 
 
 SVN_LOCAL_REPO=uFile("/home/zach/scripts/ait/")
