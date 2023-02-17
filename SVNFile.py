@@ -149,9 +149,8 @@ class SVNFile:
 
 
 
-# SVN_LOCAL_REPO=uFile("/home/zach/scripts/ait/")
-# SVN_LOCAL_REPO=uFile("O:\TC_old\maxar\AIT_repo_01_31_23")
-SVN_LOCAL_REPO=uFile("C:\\Users\\zholsing\\IdeaProjects\\icl2stol\\reference\\")
+SVN_LOCAL_REPO=uFile("/home/zach/scripts/ait/")
+# SVN_LOCAL_REPO=uFile("C:\\Users\\zholsing\\IdeaProjects\\icl2stol\\reference\\")
 SVN_REMOTE_REPO=uFile("/scripts/")
 SVN_UPDATE_LOCAL="svn update " + SVN_LOCAL_REPO.path()
 SVN_SYNTAX_CHECK="iclcheck -v OH43"

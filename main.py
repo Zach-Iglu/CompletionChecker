@@ -43,10 +43,18 @@ if __name__ == "__main__":
     CHUNKSIZE = 100
     ThreadCount = int(ceil(float(len(masterFileList)) / float(CHUNKSIZE)))
 
-    dPrint("Starting " + str(ThreadCount) + " Threads with ~" + str(CHUNKSIZE) + " Scripts Per Thread", status="WARN")
+
+    size = 0
+    for sample in make_chunks(masterFileList, CHUNKSIZE):
+        size = len(sample)
+        break
+
+    realistic_chunksize = size
+    dPrint("Starting " + str(ThreadCount) + " Threads with ~" + str(realistic_chunksize) + " Scripts Per Thread", status="WARN")
     time.sleep(2)
     index = 0
     threads = []
+
     for sample in make_chunks(masterFileList, CHUNKSIZE):
         x = threading.Thread(target=checkChunk, args=(sample, index))
         x.start()
