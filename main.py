@@ -4,11 +4,13 @@ import threading
 import time
 from itertools import islice
 from math import ceil
+from random import randint
 
 import Setup
 
 
 def checkChunk(arrayOfSVNFiles, threadCount):
+    time.sleep(randint(1, 30))
     dPrint("Starting Thread " + str(threadCount))
     retryFiles = []
     MAXRETRYCOUNT = 10
@@ -68,7 +70,7 @@ if __name__ == "__main__":
     masterFileList = Setup.getLocalICL2Files()
 
     # Specify how many per thread and it will calculate how many threads to make
-    CHUNKSIZE = 100
+    CHUNKSIZE = 10
     ThreadCount = int(ceil(float(len(masterFileList)) / float(CHUNKSIZE)))
 
 
