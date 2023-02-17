@@ -9,13 +9,36 @@ import Setup
 
 def checkChunk(arrayOfSVNFiles, threadCount):
     dPrint("Starting Thread " + str(threadCount))
+    retryFiles = []
+    MAXRETRYCOUNT = 10
     for svnFile in arrayOfSVNFiles:
         try:
             svnFile.checkSyntaxRemote()
         except Exception as er:
-            dPrint("Script " + os.path.basename(svnFile.rpath()) + " Broke :( ", status="FAIL")
+            dPrint("Script " + os.path.basename(svnFile.rpath()) + " Broke on Thread " + str(threadCount) + " :( ", status="FAIL")
             with open("error_" + str(threadCount) + ".log", 'a') as f:
                 f.write(str(er) + "\n")
+            retryFiles.append(svnFile)
+    retryCount = 1
+    while len(retryFiles) != 0 and retryCount < MAXRETRYCOUNT:
+        dPrint("(" + str(retryCount) + "/" + str(MAXRETRYCOUNT) + ") Retrying Thread " + str(threadCount) + " With " + str(len(retryFiles)) + " Files")
+        errors = []
+        for svnFile in retryFiles:
+            try:
+                svnFile.checkSyntaxRemote()
+            except Exception as er:
+                dPrint("Script " + os.path.basename(svnFile.rpath()) + " Broke on Thread " + str(threadCount) + " :( ", status="FAIL")
+                with open("error_" + str(threadCount) + ".log", 'a') as f:
+                    f.write(str(er) + "\n")
+                errors.append(svnFile)
+        retryFiles = errors
+        retryCount += 1
+
+    # Print that we are giving up on specific scripts
+    for script in retryFiles:
+        dPrint("Giving up on " + os.path.basename(script.rpath()) + " :( ", status="CRIT")
+
+
 
 
 # Special print function to print statuses
