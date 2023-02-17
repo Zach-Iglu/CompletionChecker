@@ -1,6 +1,8 @@
 # Locations
 
 # Remote Computer
+import time
+
 REMOTE_HOSTNAME="osam-das"
 REMOTE_USER="das" # Assume RSA-Pair
 
@@ -8,33 +10,47 @@ REMOTE_USER="das" # Assume RSA-Pair
 SVN_UPDATE_REMOTE_COMMAND="svnops update"
 SVN_UPDATE_REMOTE="ssh " + REMOTE_USER + "@" + REMOTE_HOSTNAME + " " + SVN_UPDATE_REMOTE_COMMAND
 
-derr = open("errors.csv", "a")
-dcrit = open("critical.csv", "a")
-dpass = open("pass.csv", "a")
-dsum = open("summary.csv", "a")
-
-def closeFiles():
-    derr.close()
-    dcrit.close()
-    dpass.close()
-    dsum.close()
+wErr = False
+wCrit = False
+wPass = False
+wSum = False
 
 # Logs Error to File
 def dError(message):
-    global derr
-    derr.write(message + "\n")
+    global wErr
+    while wErr == True:
+        time.sleep(0.1)
+    wErr = True
+    with open("errors.csv", "a") as myfile:
+        myfile.write(message + "\n")
+    wErr = False
 
 # Logs Error to File
 def dCritical(message):
-    global dcrit
-    dcrit.write(message + "\n")
+    global wCrit
+    while wCrit == True:
+        time.sleep(0.1)
+    wCrit = True
+    with open("critical.csv", "a") as myfile:
+        myfile.write(message + "\n")
+    wCrit = False
 
 # Logs Passes to File
 def dPass(message):
-    global dpass
-    dpass.write(message + "\n")
+    global wPass
+    while wPass == True:
+        time.sleep(0.1)
+    wPass = True
+    with open("pass.csv", "a") as myfile:
+        myfile.write(message + "\n")
+    wPass = False
 
 # Logs Passes to File
 def dSummary(message):
-    global dsum
-    dsum.write(message + "\n")
+    global wSum
+    while wSum == True:
+        time.sleep(0.1)
+    wSum = True
+    with open("summary.csv", "a") as myfile:
+        myfile.write(message + "\n")
+    wSum = False
