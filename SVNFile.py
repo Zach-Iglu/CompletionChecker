@@ -100,7 +100,9 @@ class SVNFile:
         else:
             # dPrint("         Errors: " + str(len(self.errors)))
             # dPrint("Critical Errors: " + str(len(self.critical_errors)))
-            dPrint(self.remote.basename + " FAILED with  " + str(len(self.critical_errors)) + " Critical Errors", status="FAIL")
+            dPrint(self.remote.basename + " FAILED with " + str(len(self.critical_errors)) + " Critical Errors", status="FAIL")
+            for err in self.critical_errors:
+                dPrint(err, status="FAIL")
 
 
 
