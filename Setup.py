@@ -49,13 +49,7 @@ def filesInDir(dir, ext):    # dir: str, ext: list
     subfolders, files = [], []
 
     for f in os.listdir(dir):
-        if platform.system() == "Windows" and dir[-1] != "\\":
-            f = dir + "\\" + f
-            print("f is now " + f)
-        elif dir[-1] != "/":
-            f = dir + "/" + f
-            print("f is now " + f)
-
+        f = dir + f
         if os.path.isdir(f):
             subfolders.append(f)
         if os.path.isfile(f):
