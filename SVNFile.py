@@ -90,10 +90,10 @@ class SVNFile:
                 ## Each error is listed as a line, we clean it up and add it
                 self.errors.append(error.strip())
 
-                if "brace" in error.lower() or "bracket" in error.lower():
+                if ("close brace not aligned" not in error.lower()) and ("brace" in error.lower() or "bracket" in error.lower()):
                     self.critical_errors.append(error.strip())
 
-                if "unknown" not in error.lower() and (("command" in error.lower() and "can't find command to check in" in error.lower()) or "tlm" in error.lower() or "telemetry" in error.lower()):
+                if "unknown" not in error.lower() and (("command" in error.lower() and "can't find command to check in" not in error.lower()) or "tlm" in error.lower() or "telemetry" in error.lower()):
                     self.critical_errors.append(error.strip())
 
 

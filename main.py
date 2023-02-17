@@ -1,9 +1,8 @@
-import SVNFile
 import Setup
 
 if __name__ == "__main__":
-    Setup.updateSVNlocal()
-    Setup.updateSVNremote()
+    #Setup.updateSVNlocal()
+    #Setup.updateSVNremote()
 
     Setup.cleanFiles()
 
