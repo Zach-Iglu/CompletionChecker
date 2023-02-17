@@ -1,13 +1,3 @@
-from enum import Enum
-
-
-class Status(Enum):
-    STATUS  = "STAT"
-    WARN    = "WARN"
-    ERROR   = "ERRR"
-    FAIL    = "FAIL"
-    SUCCESS = "SUCC"
-
 # Locations
 
 # Remote Computer

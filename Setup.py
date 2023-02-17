@@ -2,14 +2,16 @@ import os
 ##########
 
 # Statuses
+import platform
+
 import SVNFile
 import variables
 
 
 # Special print function to print statuses
-def dPrint(message: str, status=variables.Status.STATUS, Logging=True):
+def dPrint(message, status="STAT", Logging=True):
     # Print File to Console
-    print(status.value + " | " + message)
+    print(status + " | " + message)
 
     # Log File
     if Logging:
@@ -21,7 +23,7 @@ def updateSVNremote(parallel=False, verbose=False):
     if verbose:
         dPrint("Updating Remote SVN")
         dPrint("Parallel: " + str(parallel))
-        dPrint("Sending Command: " + variables.SVN_UPDATE_REMOTE, status=variables.Status.WARN)
+        dPrint("Sending Command: " + variables.SVN_UPDATE_REMOTE, status="WARN")
     if not parallel:
         os.system(variables.SVN_UPDATE_REMOTE)
     else:
@@ -32,7 +34,7 @@ def updateSVNlocal(parallel=False, verbose=False):
     if verbose:
         dPrint("Updating Local SVN")
         dPrint("Parallel: " + str(parallel))
-        dPrint("Sending Command: " + SVNFile.SVN_UPDATE_LOCAL, status=variables.Status.WARN)
+        dPrint("Sending Command: " + SVNFile.SVN_UPDATE_LOCAL, status="WARN")
     if not parallel:
         os.system(SVNFile.SVN_UPDATE_LOCAL)
     else:
@@ -46,18 +48,24 @@ From: https://stackoverflow.com/questions/18394147/how-to-do-a-recursive-sub-fol
 def filesInDir(dir, ext):    # dir: str, ext: list
     subfolders, files = [], []
 
-    for f in os.scandir(dir):
-        if f.is_dir():
-            subfolders.append(f.path)
-        if f.is_file():
-            if os.path.splitext(f.name)[1].lower() in ext:
-                files.append(f.path)
+    for f in os.listdir(dir):
+        f = dir + f
+        if os.path.isdir(f):
+            subfolders.append(f)
+        if os.path.isfile(f):
+            # extension = f.split(".")[-1]
+            # if extension == "icl2":
+            if "." + f.split(".")[-1] in ext:
+                files.append(f)
 
-
-    for dir in list(subfolders):
-        sf, f = filesInDir(dir, ext)
+    for dir in subfolders:
+        if platform.system() == "Windows":
+            sf, f = filesInDir(dir + "\\", ext)
+        else:
+            sf, f = filesInDir(dir + "/", ext)
         subfolders.extend(sf)
         files.extend(f)
+
     return subfolders, files
 
 # Get List of ICL2 Scripts From Local System
