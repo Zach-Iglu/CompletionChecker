@@ -5,6 +5,8 @@ from itertools import islice
 from math import ceil
 
 import Setup
+from variables import closeFiles
+
 
 def checkChunk(arrayOfSVNFiles, threadCount):
     dPrint("Starting Thread " + str(threadCount))
@@ -68,4 +70,6 @@ if __name__ == "__main__":
 
     for thread in threads:
         thread.join()
-    # dPrint("All Threads Done, Generating Summary")
+
+    closeFiles()
+    dPrint("All Threads Done, Generating Summary")
