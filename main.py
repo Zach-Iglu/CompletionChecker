@@ -70,8 +70,8 @@ if __name__ == "__main__":
     masterFileList = Setup.getLocalICL2Files()
 
     # Specify how many per thread and it will calculate how many threads to make
-    CHUNKSIZE = 10
-    ThreadCount = int(ceil(float(len(masterFileList)) / float(CHUNKSIZE)))
+    ThreadCount = 60
+    CHUNKSIZE = int(ceil(float(len(masterFileList)) / float(ThreadCount)))
 
 
     size = 0
