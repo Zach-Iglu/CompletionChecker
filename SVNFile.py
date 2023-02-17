@@ -65,17 +65,37 @@ class SVNFile:
         return self.remote.path()
 
     def checkSyntaxRemote(self):
-        command_to_check = "ssh " + variables.REMOTE_USER + "@" + variables.REMOTE_HOSTNAME + " " + SVN_SYNTAX_CHECK + " " + self.remote.path()
+        command_to_check = "ssh -X " + variables.REMOTE_USER + "@" + variables.REMOTE_HOSTNAME + " " + SVN_SYNTAX_CHECK + " " + self.remote.path()
         dPrint("Checking Syntax of " + self.remote.basename)
         dPrint(command_to_check, status="WARN")
+        # Send Command
         command = subprocess.check_output(command_to_check, shell=True, stderr=subprocess.STDOUT)
+
+        # Get Response
         response = command.decode("utf-8").split("\n")
-        print("Got Response: " + str(response))
+        self.raw_response = response
+
+        response.pop(0)  # Just a check
+        self.errors = []
+        self.critical_errors = []
+
+        for error in response:
+            ## Each error is listed as a line, we clean it up and add it
+            self.errors.append(error.strip())
+
+            if "braces" in error.lower() or "bracket" in error.lower():
+                self.critical_errors.append(error.strip())
+
+        if len(self.critical_errors) == 0:
+            dPrint("Script **Should** Pass")
+        else:
+            dPrint("         Errors: " + str(len(self.errors)))
+            dPrint("Critical Errors: " + str(len(self.critical_errors)))
 
 
 SVN_LOCAL_REPO=uFile("/home/zach/scripts/ait/")
 # SVN_LOCAL_REPO=uFile("O:\TC_old\maxar\AIT_repo_01_31_23")
 # SVN_LOCAL_REPO=uFile("C:\\Users\\zholsing\\IdeaProjects\\icl2stol\\reference\\")
-SVN_REMOTE_REPO=uFile("/scripts/ait/")
+SVN_REMOTE_REPO=uFile("/scripts/")
 SVN_UPDATE_LOCAL="svn update " + SVN_LOCAL_REPO.path()
 SVN_SYNTAX_CHECK="iclcheck -v OH43"
