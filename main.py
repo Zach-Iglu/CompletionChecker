@@ -1,4 +1,6 @@
+import os
 import threading
+import time
 from itertools import islice
 from math import ceil
 
@@ -9,8 +11,8 @@ def checkChunk(arrayOfSVNFiles, threadCount):
     for svnFile in arrayOfSVNFiles:
         try:
             svnFile.checkSyntaxRemote()
-        except:
-            dPrint("Thread " + str(threadCount) + " Broke For " + svnFile.basename(), status="FAIL")
+        except Exception as e:
+            dPrint("Script " + os.path.basename(svnFile.rpath()) + " Broke :( ", status="FAIL")
 
 # Special print function to print statuses
 def dPrint(message, status="STAT", Logging=True, onlyLog=False):
@@ -38,10 +40,11 @@ if __name__ == "__main__":
     masterFileList = Setup.getLocalICL2Files()
 
     # Specify how many per thread and it will calculate how many threads to make
-    CHUNKSIZE = 6
+    CHUNKSIZE = 100
     ThreadCount = int(ceil(float(len(masterFileList)) / float(CHUNKSIZE)))
 
     dPrint("Starting " + str(ThreadCount) + " Threads with ~" + str(CHUNKSIZE) + " Scripts Per Thread", status="WARN")
+    time.sleep(2)
     index = 0
     threads = []
     for sample in make_chunks(masterFileList, CHUNKSIZE):
@@ -52,4 +55,4 @@ if __name__ == "__main__":
 
     for thread in threads:
         thread.join()
-    dPrint("All Threads Done, Generating Summary")
+    # dPrint("All Threads Done, Generating Summary")
