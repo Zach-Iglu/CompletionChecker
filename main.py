@@ -12,8 +12,11 @@ def checkChunk(arrayOfSVNFiles, threadCount):
     for svnFile in arrayOfSVNFiles:
         try:
             svnFile.checkSyntaxRemote()
-        except Exception as e:
+        except Exception as er:
             dPrint("Script " + os.path.basename(svnFile.rpath()) + " Broke :( ", status="FAIL")
+            with open("error_" + str(threadCount) + ".log", 'a') as f:
+                f.write(str(er) + "\n")
+
 
 # Special print function to print statuses
 def dPrint(message, status="STAT", Logging=True, onlyLog=False):
