@@ -11,15 +11,15 @@ import variables
 
 
 # Special print function to print statuses
-def dPrint(message, status="Stat", Logging=True):
-    # Print File to Console
-    print(status + " | " + message)
+def dPrint(message, status="Stat", Logging=True, onlyLog=False):
+    if not onlyLog:
+        # Print File to Console
+        print(status + " | " + message)
 
     # Log File
     if Logging:
         with open("runLog.log", "a") as myfile:
             myfile.write(str(status) + " | " + message + "\n")
-
 
 class uFile:
     """
@@ -97,14 +97,43 @@ class SVNFile:
 
         endTime = datetime.datetime.now()
         elapsed = (endTime - beginTime).seconds
+        time = " (" + str(elapsed) + " Sec)"
+        self.elapsed = elapsed
+
         if len(self.critical_errors) == 0:
-            dPrint(self.remote.basename + " **Passed** ", status="SUCC")
+            dPrint(self.remote.basename + time + " **Passed** ", status="SUCC")
         else:
-            # dPrint("         Errors: " + str(len(self.errors)))
-            # dPrint("Critical Errors: " + str(len(self.critical_errors)))
-            dPrint(self.remote.basename + " FAILED with " + str(len(self.critical_errors)) + " Critical Errors", status="FAIL")
-            # for err in self.critical_errors:
-            #     dPrint(err, status="FAIL")
+            dPrint(self.remote.basename + time + " FAILED with " + str(len(self.critical_errors)) + " Critical Errors", status="FAIL")
+
+        # Log to File
+        self.logReport()
+
+    def logReport(self):
+        """
+        Prints Logs for Final Summary Generation
+        :return:
+        """
+        """
+        Error CSV Structure
+        <file> <time> <status> <critical (y/n)> <error>
+        
+        PASS CSV Structure
+        <file> <time> <status> <total errors>
+        """
+        status = "FAIL"
+        if len(self.critical_errors) == 0:
+            status = "PASS"
+        baseStruct = self.remote.basename + ", " + datetime.datetime.today().strftime("%a %b %y") + ", " + status + ", "
+        if len(self.critical_errors) != 0:
+            for err in self.errors:
+                if err in self.critical_errors:
+                    errorLogEntry = baseStruct + "Y, " + err.replace(",", " ")
+                else:
+                    errorLogEntry = baseStruct + "N, " + err.replace(",", " ")
+                variables.dError(errorLogEntry)
+        else:
+            passLogEntry = baseStruct + str(len(self.errors))
+            variables.dPass(passLogEntry)
 
 
 

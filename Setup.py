@@ -7,19 +7,39 @@ import platform
 import SVNFile
 import variables
 
+# Purges files to prepare for a new scan
+def cleanFiles():
+    dPrint("Cleaning Files", status="WARN")
+    # purge error log
+    try:
+        os.remove("errors.csv")
+    except:
+        pass
+    # purge pass log
+    try:
+        os.remove("pass.csv")
+    except:
+        pass
+    # purge summary log
+    try:
+        os.remove("summary.csv")
+    except:
+        pass
+
 
 # Special print function to print statuses
-def dPrint(message, status="STAT", Logging=True):
-    # Print File to Console
-    print(status + " | " + message)
+def dPrint(message, status="Stat", Logging=True, onlyLog=False):
+    if not onlyLog:
+        # Print File to Console
+        print(status + " | " + message)
 
     # Log File
     if Logging:
-        open("runLog.log", 'a').writelines(str(status) + " | " + message)
-
+        with open("runLog.log", "a") as myfile:
+            myfile.write(str(status) + " | " + message + "\n")
 
 # Update SVN On Remote System
-def updateSVNremote(parallel=False, verbose=False):
+def updateSVNremote(parallel=False, verbose=True):
     if verbose:
         dPrint("Updating Remote SVN")
         dPrint("Parallel: " + str(parallel))
@@ -30,7 +50,7 @@ def updateSVNremote(parallel=False, verbose=False):
         os.popen(variables.SVN_UPDATE_REMOTE)
 
 # Update SVN on Local System
-def updateSVNlocal(parallel=False, verbose=False):
+def updateSVNlocal(parallel=False, verbose=True):
     if verbose:
         dPrint("Updating Local SVN")
         dPrint("Parallel: " + str(parallel))

@@ -7,3 +7,13 @@ REMOTE_USER="das" # Assume RSA-Pair
 # Commands
 SVN_UPDATE_REMOTE_COMMAND="svnops update"
 SVN_UPDATE_REMOTE="ssh " + REMOTE_USER + "@" + REMOTE_HOSTNAME + " " + SVN_UPDATE_REMOTE_COMMAND
+
+# Logs Error to File
+def dError(message):
+        with open("errors.csv", "a") as myfile:
+            myfile.write(message + "\n")
+
+# Logs Passes to File
+def dPass(message):
+    with open("errors.csv", "a") as myfile:
+        myfile.write(message + "\n")
