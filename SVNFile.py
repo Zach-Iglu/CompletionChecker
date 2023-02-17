@@ -17,7 +17,9 @@ def dPrint(message, status="Stat", Logging=True):
 
     # Log File
     if Logging:
-        open("runLog.log", 'a').writelines(str(status) + " | " + message)
+        with open("runLog.log", "a") as myfile:
+            myfile.write(str(status) + " | " + message + "\n")
+
 
 class uFile:
     """
@@ -101,8 +103,8 @@ class SVNFile:
             # dPrint("         Errors: " + str(len(self.errors)))
             # dPrint("Critical Errors: " + str(len(self.critical_errors)))
             dPrint(self.remote.basename + " FAILED with " + str(len(self.critical_errors)) + " Critical Errors", status="FAIL")
-            for err in self.critical_errors:
-                dPrint(err, status="FAIL")
+            # for err in self.critical_errors:
+            #     dPrint(err, status="FAIL")
 
 
 
