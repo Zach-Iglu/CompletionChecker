@@ -56,6 +56,25 @@ class SVNFile:
         self.basename = os.path.basename(local_location)
         self.remote = uFile(self.local.original.replace(SVN_LOCAL_REPO.path(), SVN_REMOTE_REPO.path()))
 
+    # Logs Error to File
+    def dError(self, message):
+        with open(self.basename + "_" + "errors.Ierr", "a") as myfile:
+            myfile.write(message + "\n")
+    # Logs Error to File
+    def dCritical(self, message):
+        with open(self.basename + "_" + "critical.Icrit", "a") as myfile:
+            myfile.write(message + "\n")
+
+    # Logs Passes to File
+    def dPass(self, message):
+        with open(self.basename + "_" + "pass.Ipass", "a") as myfile:
+            myfile.write(message + "\n")
+
+    # Logs Passes to File
+    def dSummary(self, message):
+        with open(self.basename + "_" + "summary.Isum", "a") as myfile:
+            myfile.write(message + "\n")
+
     """
     returns local path
     """
@@ -135,21 +154,21 @@ class SVNFile:
                 if len(err.strip()) > 0:
                     if err in self.critical_errors:
                         errorLogEntry = baseStruct + "Y, " + err.replace(",", " ") + ", " + self.remote.path()
-                        variables.dCritical(errorLogEntry)
+                        self.dCritical(errorLogEntry)
                     else:
                         errorLogEntry = baseStruct + "N, " + err.replace(",", " ") + ", " + self.remote.path()
-                        variables.dError(errorLogEntry)
+                        self.dError(errorLogEntry)
         else:
             passLogEntry = baseStruct + str(len(self.errors)) + ", " + self.remote.path()
-            variables.dPass(passLogEntry)
+            self.dPass(passLogEntry)
 
         summaryEntry = baseStruct + str(len(self.errors)) + ", " + str(len(self.errors)) + ", " + str(len(self.critical_errors)) + ", " + self.remote.path()
-        variables.dSummary(summaryEntry)
+        self.dSummary(summaryEntry)
 
 
 
-SVN_LOCAL_REPO=uFile("/home/zach/scripts/ait/")
-# SVN_LOCAL_REPO=uFile("C:\\Users\\zholsing\\IdeaProjects\\icl2stol\\reference\\")
+# SVN_LOCAL_REPO=uFile("/home/zach/scripts/ait/")
+SVN_LOCAL_REPO=uFile("C:\\Users\\zholsing\\IdeaProjects\\icl2stol\\reference\\")
 SVN_REMOTE_REPO=uFile("/scripts/")
 SVN_UPDATE_LOCAL="svn update " + SVN_LOCAL_REPO.path()
 SVN_SYNTAX_CHECK="iclcheck -v OH43"
