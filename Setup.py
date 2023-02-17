@@ -35,7 +35,7 @@ def cleanFiles():
 
 
 # Special print function to print statuses
-def dPrint(message, status="Stat", Logging=True, onlyLog=False):
+def dPrint(message, status="STAT", Logging=True, onlyLog=False):
     if not onlyLog:
         # Print File to Console
         print(status + " | " + message)
