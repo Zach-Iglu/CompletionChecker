@@ -1,3 +1,4 @@
+import datetime
 import os
 import threading
 import time
@@ -87,6 +88,7 @@ if __name__ == "__main__":
     index = 0
     threads = []
 
+    beginTime = datetime.datetime.now()
     for sample in make_chunks(masterFileList, CHUNKSIZE):
         x = threading.Thread(target=checkChunk, args=(sample, index))
         x.start()
@@ -96,4 +98,6 @@ if __name__ == "__main__":
     for thread in threads:
         thread.join()
 
-    dPrint("All Threads Done, Generating Summary")
+    endTime = datetime.datetime.now()
+    elapsed = (endTime - beginTime).seconds
+    dPrint("(" + str(elapsed) + " Sec) All Threads Done, Generating Summary")
