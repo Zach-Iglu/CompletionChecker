@@ -17,3 +17,8 @@ def dError(message):
 def dPass(message):
     with open("pass.csv", "a") as myfile:
         myfile.write(message + "\n")
+
+# Logs Passes to File
+def dSummary(message):
+    with open("summary.csv", "a") as myfile:
+        myfile.write(message + "\n")

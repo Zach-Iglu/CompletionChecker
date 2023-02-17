@@ -103,7 +103,7 @@ class SVNFile:
         self.elapsed = elapsed
 
         if len(self.critical_errors) == 0:
-            dPrint(self.remote.basename + time + " **Passed** ", status="SUCC")
+            dPrint(self.remote.basename + time + " **Passed** ", status="PASS")
         else:
             dPrint(self.remote.basename + time + " FAILED with " + str(len(self.critical_errors)) + " Critical Errors", status="FAIL")
 
@@ -117,10 +117,14 @@ class SVNFile:
         """
         """
         Error CSV Structure
-        <file> <time> <status> <critical (y/n)> <error>
+        <file> <time> <status> <critical (y/n)> <error> <filepath>
         
         PASS CSV Structure
-        <file> <time> <status> <total errors>
+        <file> <time> <status> <total errors> <filepath>
+        
+        Summary CSV Structure
+        <file> <time> <status> <total errors> <critical errors> <filepath>
+        
         """
         status = "FAIL"
         if len(self.critical_errors) == 0:
@@ -130,14 +134,16 @@ class SVNFile:
             for err in self.errors:
                 if len(err.strip()) > 0:
                     if err in self.critical_errors:
-                        errorLogEntry = baseStruct + "Y, " + err.replace(",", " ")
+                        errorLogEntry = baseStruct + "Y, " + err.replace(",", " ") + ", " + self.remote.path()
                     else:
-                        errorLogEntry = baseStruct + "N, " + err.replace(",", " ")
+                        errorLogEntry = baseStruct + "N, " + err.replace(",", " ") + ", " + self.remote.path()
                     variables.dError(errorLogEntry)
         else:
-            passLogEntry = baseStruct + str(len(self.errors))
+            passLogEntry = baseStruct + str(len(self.errors)) + ", " + self.remote.path()
             variables.dPass(passLogEntry)
 
+        summaryEntry = baseStruct + str(len(self.errors)) + ", " + str(len(self.errors)) + ", " + str(len(self.critical_errors)) + ", " + self.remote.path()
+        variables.dSummary(summaryEntry)
 
 
 
