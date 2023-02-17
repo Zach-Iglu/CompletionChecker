@@ -87,7 +87,7 @@ class SVNFile:
 
         for error in response:
             error = error.strip()
-            if len(error) > 0:
+            if len(error) > 0 and "strange command" not in error.lower():
                 ## Each error is listed as a line, we clean it up and add it
                 self.errors.append(error.strip())
 
