@@ -85,14 +85,16 @@ class SVNFile:
         self.critical_errors = []
 
         for error in response:
-            ## Each error is listed as a line, we clean it up and add it
-            self.errors.append(error.strip())
+            error = error.strip()
+            if len(error) > 0:
+                ## Each error is listed as a line, we clean it up and add it
+                self.errors.append(error.strip())
 
-            if "braces" in error.lower() or "bracket" in error.lower():
-                self.critical_errors.append(error.strip())
+                if "brace" in error.lower() or "bracket" in error.lower():
+                    self.critical_errors.append(error.strip())
 
-            if "unknown" not in error.lower() and ("command" in error.lower() or "tlm" in error.lower() or "telemetry" in error.lower()):
-                self.critical_errors.append(error.strip())
+                if "unknown" not in error.lower() and (("command" in error.lower() and "can't find command to check in" in error.lower()) or "tlm" in error.lower() or "telemetry" in error.lower()):
+                    self.critical_errors.append(error.strip())
 
 
         endTime = datetime.datetime.now()
@@ -126,11 +128,12 @@ class SVNFile:
         baseStruct = self.remote.basename + ", " + datetime.datetime.today().strftime("%a %b %y") + ", " + status + ", "
         if len(self.critical_errors) != 0:
             for err in self.errors:
-                if err in self.critical_errors:
-                    errorLogEntry = baseStruct + "Y, " + err.replace(",", " ")
-                else:
-                    errorLogEntry = baseStruct + "N, " + err.replace(",", " ")
-                variables.dError(errorLogEntry)
+                if len(err.strip()) > 0:
+                    if err in self.critical_errors:
+                        errorLogEntry = baseStruct + "Y, " + err.replace(",", " ")
+                    else:
+                        errorLogEntry = baseStruct + "N, " + err.replace(",", " ")
+                    variables.dError(errorLogEntry)
         else:
             passLogEntry = baseStruct + str(len(self.errors))
             variables.dPass(passLogEntry)
