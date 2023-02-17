@@ -50,8 +50,13 @@ if __name__ == "__main__":
         break
 
     realistic_chunksize = size
+
+    SINGLE_THREAD_TIME_SEC = 17
+
+    total_time_hours = ((float(SINGLE_THREAD_TIME_SEC) * float(realistic_chunksize)) / 60)
     dPrint("Starting " + str(ThreadCount) + " Threads with ~" + str(realistic_chunksize) + " Scripts Per Thread", status="WARN")
-    time.sleep(2)
+    dPrint("Est. " + str(total_time_hours) + " Minutes to Complete")
+    time.sleep(5)
     index = 0
     threads = []
 
