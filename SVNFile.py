@@ -4,6 +4,7 @@
 ###################
 import os.path
 import platform
+import subprocess
 
 import variables
 
@@ -65,8 +66,11 @@ class SVNFile:
 
     def checkSyntaxRemote(self):
         command_to_check = "ssh " + variables.REMOTE_USER + "@" + variables.REMOTE_HOSTNAME + " " + SVN_SYNTAX_CHECK + " " + self.remote.path()
-        dPrint("Checking Syntax of " + self.remote.basename + " (" + self.remote.original + ")" )
+        dPrint("Checking Syntax of " + self.remote.basename)
         dPrint(command_to_check, status="WARN")
+        command = subprocess.check_output(command_to_check, shell=True, stderr=subprocess.STDOUT)
+        response = command.decode("utf-8").split("\n")
+        print("Got Response: " + str(response))
 
 
 SVN_LOCAL_REPO=uFile("/home/zach/scripts/ait/")
