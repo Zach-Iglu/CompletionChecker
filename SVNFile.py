@@ -135,9 +135,10 @@ class SVNFile:
                 if len(err.strip()) > 0:
                     if err in self.critical_errors:
                         errorLogEntry = baseStruct + "Y, " + err.replace(",", " ") + ", " + self.remote.path()
+                        variables.dCritical(errorLogEntry)
                     else:
                         errorLogEntry = baseStruct + "N, " + err.replace(",", " ") + ", " + self.remote.path()
-                    variables.dError(errorLogEntry)
+                        variables.dError(errorLogEntry)
         else:
             passLogEntry = baseStruct + str(len(self.errors)) + ", " + self.remote.path()
             variables.dPass(passLogEntry)

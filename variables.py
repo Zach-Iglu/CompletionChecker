@@ -13,6 +13,11 @@ def dError(message):
         with open("errors.csv", "a") as myfile:
             myfile.write(message + "\n")
 
+# Logs Error to File
+def dCritical(message):
+    with open("critical.csv", "a") as myfile:
+        myfile.write(message + "\n")
+
 # Logs Passes to File
 def dPass(message):
     with open("pass.csv", "a") as myfile:

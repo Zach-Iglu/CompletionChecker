@@ -26,6 +26,13 @@ def cleanFiles():
     except:
         pass
 
+    # purge summary log
+    try:
+        os.remove("critical.csv")
+    except:
+        pass
+
+
 
 # Special print function to print statuses
 def dPrint(message, status="Stat", Logging=True, onlyLog=False):
